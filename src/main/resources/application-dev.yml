@@ -1,0 +1,37 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  application:
+    name: campus-forum
+  datasource:
+    url: "jdbc:mysql://localhost:3306/common_db?
+    serverTimezone=Asia/Shanghai&
+    useUnicode=true&
+    characterEncoding=UTF-8"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
+  web:
+    resources:
+      static-locations: file:${campusforum.upload.image}
+campusforum:
+  page:
+    topic: 10
+    comment: 6
+  upload:
+    image: /Users/lixin/Downloads/campus/img
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+server:
+  servlet:
+    context-path: /campus
+    session:
+      persistent: false

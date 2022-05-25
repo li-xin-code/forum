@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lixin.campusforum.forum.dao.TopicDao">
+
+    <insert id="insert">
+        insert into topic(topic_id, author_id, title, content, create_time)
+            value (#{topicId}, #{authorId}, #{title}, #{content}, #{createTime});
+    </insert>
+
+    <update id="update">
+        update topic
+        set title   = #{title},
+            content = #{content}
+        where topic_id = #{topicId}
+    </update>
+
+    <delete id="delete">
+        delete
+        from topic
+        where topic_id = #{topicId}
+    </delete>
+
+    <select id="one" resultType="com.lixin.campusforum.forum.model.bo.TopicBo">
+        select topic_id, author_id, username as author, title, content, create_time
+        from topic
+                 inner join user on user.uuid = topic.author_id
+        where topic_id = #{topicId};
+    </select>
+
+    <select id="list" resultType="com.lixin.campusforum.forum.model.bo.TopicListItem">
+        select topic_id, username as author, title, create_time
+        from topic
+                 inner join user on user.uuid = topic.author_id
+        order by create_time desc
+        limit #{offset}, #{rows};
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*)
+        from topic;
+    </select>
+
+</mapper>
