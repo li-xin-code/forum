@@ -3,7 +3,7 @@ spring:
     activate:
       on-profile: dev
   application:
-    name: campus-forum
+    name: forum
   datasource:
     url: "jdbc:mysql://localhost:3306/common_db?
     serverTimezone=Asia/Shanghai&
@@ -19,7 +19,7 @@ spring:
   web:
     resources:
       static-locations: file:${campusforum.upload.image}
-campusforum:
+forum:
   page:
     topic: 10
     comment: 6
@@ -32,6 +32,6 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 server:
   servlet:
-    context-path: /campus
+    context-path: /forum
     session:
       persistent: false

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties("campusforum")
+@ConfigurationProperties("forum")
 public class CampusForumConfig {
     private PageConfig pageConfig;
 }

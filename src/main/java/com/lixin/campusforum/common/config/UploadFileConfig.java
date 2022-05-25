@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties("campusforum.upload")
+@ConfigurationProperties("forum.upload")
 public class UploadFileConfig {
     private String image;
 }

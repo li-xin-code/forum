@@ -1,19 +1,19 @@
 {
   "properties": [
     {
-      "name": "campusforum.page.topic",
+      "name": "forum.page.topic",
       "type": "java.lang.String",
       "description": "Description for campusforum.page.topic.",
       "defaultValue": 12
     },
     {
-      "name": "campusforum.page.comment",
+      "name": "forum.page.comment",
       "type": "java.lang.String",
       "description": "Description for campusforum.page.comment.",
       "defaultValue": 12
     },
     {
-      "name": "campusforum.upload.image",
+      "name": "forum.upload.image",
       "type": "java.lang.String",
       "description": "Description for campusforum.upload.image."
     }
