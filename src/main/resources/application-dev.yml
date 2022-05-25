@@ -24,7 +24,7 @@ campusforum:
     topic: 10
     comment: 6
   upload:
-    image: /Users/lixin/Downloads/campus/img
+    image: /Users/lixin/Downloads/forum/img
 
 mybatis:
   configuration:
