@@ -83,6 +83,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void remove(String commentId, String userId) {
         CommentBo bo = commentDao.one(commentId);
+        if (bo == null) {
+            throw new NotExpectedException("comment not found.");
+        }
         if (bo.getAuthorId().equals(userId)) {
             int rows = commentDao.delete(commentId);
             if (rows < 1) {
@@ -100,8 +103,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private CommentVo b2v(CommentBo bo) {
-        CommentVo vo = bo.getReplyId().isEmpty() ?
-                new CommentVo() : new ReplyVo().setReplyId(bo.getReplyId()).setReplyAuthor(bo.getReplyAuthor());
+        CommentVo vo = bo.getReplyId().isEmpty() ? new CommentVo() :
+                new ReplyVo().setReplyId(bo.getReplyId()).
+                        setReplyAuthor(bo.getReplyAuthor());
         vo.setCommentId(bo.getCommentId());
         vo.setContent(bo.getContent());
         vo.setAuthorId(bo.getAuthorId());
