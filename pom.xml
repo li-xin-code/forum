@@ -12,8 +12,8 @@
     <artifactId>forum</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>CampusForum</name>
-    <description>CampusForum</description>
+    <name>forum</name>
+    <description>forum</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.75</version>
+            <version>1.2.9</version>
         </dependency>
 
         <dependency>
