@@ -18,7 +18,7 @@ spring:
       max-request-size: 30MB
   web:
     resources:
-      static-locations: file:${campusforum.upload.image}
+      static-locations: file:${forum.upload.image}
 forum:
   page:
     topic: 10
