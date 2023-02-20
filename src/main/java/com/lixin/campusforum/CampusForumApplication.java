@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author lixin
  */
 @SpringBootApplication
-@MapperScan(value = {"com.lixin.campusforum.user.dao", "com.lixin.campusforum.forum.dao"})
+@MapperScan(value = {"com.lixin.campusforum.dao"})
 public class CampusForumApplication {
 
     public static void main(String[] args) {

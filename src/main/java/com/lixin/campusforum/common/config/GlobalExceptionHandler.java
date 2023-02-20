@@ -6,6 +6,8 @@ import com.lixin.campusforum.common.exception.SystemException;
 import com.lixin.campusforum.common.exception.TokenInvalidException;
 import com.lixin.campusforum.common.result.NoDataResult;
 import com.lixin.campusforum.common.utils.ResultUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -24,12 +26,13 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(SystemException.class)
     public NoDataResult systemExceptionHandler(SystemException e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(), e);
         return ResultUtils.fail(e.getMessage());
     }
 

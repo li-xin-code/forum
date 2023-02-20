@@ -1,8 +1,8 @@
 package com.lixin.campusforum;
 
-import com.lixin.campusforum.forum.model.form.CommentForm;
-import com.lixin.campusforum.forum.model.form.ReplyForm;
-import com.lixin.campusforum.forum.service.CommentService;
+import com.lixin.campusforum.model.form.CommentForm;
+import com.lixin.campusforum.model.form.ReplyForm;
+import com.lixin.campusforum.service.CommentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

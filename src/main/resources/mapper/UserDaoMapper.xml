@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lixin.campusforum.user.dao.UserDao">
+<mapper namespace="com.lixin.campusforum.dao.UserDao">
 
-    <insert id="insert" parameterType="com.lixin.campusforum.user.model.bo.UserBo">
-        insert into user(uuid, username, password) value (#{uuid},#{username},#{password});
+    <insert id="insert" parameterType="com.lixin.campusforum.model.bo.UserBo">
+        insert into user(uuid, username, password) value (#{uuid}, #{username}, #{password});
     </insert>
 
     <update id="updateName">
@@ -24,16 +24,18 @@
         where username = #{username};
     </select>
 
-    <select id="find" resultType="com.lixin.campusforum.user.model.bo.UserBo">
+    <select id="find" resultType="com.lixin.campusforum.model.bo.UserBo">
         select username, password, uuid
         from user
-        where username = #{username} limit 1;
+        where username = #{username}
+        limit 1;
     </select>
 
-    <select id="findByUuid" resultType="com.lixin.campusforum.user.model.bo.UserBo">
+    <select id="findByUuid" resultType="com.lixin.campusforum.model.bo.UserBo">
         select username, password, uuid
         from user
-        where uuid = #{uuid} limit 1;
+        where uuid = #{uuid}
+        limit 1;
     </select>
 
 </mapper>

@@ -13,9 +13,9 @@
       "defaultValue": 12
     },
     {
-      "name": "forum.upload.image",
+      "name": "forum.upload.image-path",
       "type": "java.lang.String",
-      "description": "Description for campusforum.upload.image."
+      "description": "Description for forum.upload.image-path."
     }
   ]
 }

@@ -18,13 +18,14 @@ spring:
       max-request-size: 30MB
   web:
     resources:
-      static-locations: file:${forum.upload.image}
+      static-locations: file:${forum.upload.image-path}
+
 forum:
   page:
     topic: 10
     comment: 6
   upload:
-    image: /Users/lixin/Downloads/forum/img
+    image-path: /Users/lixin/Downloads/forum/img
 
 mybatis:
   configuration:
@@ -35,3 +36,5 @@ server:
     context-path: /forum
     session:
       persistent: false
+logging:
+  config: classpath:log4j2.xml

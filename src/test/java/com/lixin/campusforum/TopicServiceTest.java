@@ -1,8 +1,8 @@
 package com.lixin.campusforum;
 
-import com.lixin.campusforum.forum.model.form.TopicForm;
-import com.lixin.campusforum.forum.service.TopicService;
-import org.junit.jupiter.api.Test;
+import com.lixin.campusforum.model.form.TopicForm;
+import com.lixin.campusforum.service.TopicService;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,4 +26,5 @@ public class TopicServiceTest {
         form.setContent("正文");
         topicService.add(form, author);
     }
+
 }

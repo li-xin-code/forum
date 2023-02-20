@@ -42,7 +42,7 @@ public class UploadController {
         String suffix = originalFilename.substring(originalFilename.lastIndexOf('.'));
         String filename = UUID.randomUUID().toString()
                 .replace("-", "") + suffix;
-        String path = uploadFileConfig.getImage();
+        String path = uploadFileConfig.getImagePath();
         File dest = new File(path + "/" + filename);
         if (!dest.getParentFile().exists()) {
             boolean b = dest.getParentFile().mkdirs();

@@ -11,5 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("forum.upload")
 public class UploadFileConfig {
-    private String image;
+
+    /**
+     * 图片上传保存路径
+     */
+    private String imagePath;
+    
 }
