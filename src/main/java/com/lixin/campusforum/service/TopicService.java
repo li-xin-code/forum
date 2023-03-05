@@ -1,11 +1,12 @@
 package com.lixin.campusforum.service;
 
-import com.lixin.campusforum.model.bo.TopicListItem;
+import com.lixin.campusforum.common.result.DataResult;
+import com.lixin.campusforum.common.result.NoDataResult;
 import com.lixin.campusforum.model.form.TopicForm;
 import com.lixin.campusforum.model.form.TopicModifyForm;
-import com.lixin.campusforum.model.vo.TopicVo;
-
-import java.util.List;
+import com.lixin.campusforum.model.vo.topic.AddTopicVo;
+import com.lixin.campusforum.model.vo.topic.TopicListVo;
+import com.lixin.campusforum.model.vo.topic.TopicVo;
 
 /**
  * @author lixin
@@ -19,7 +20,7 @@ public interface TopicService {
      * @param authorId ...
      * @return topic id.
      */
-    String add(TopicForm form, String authorId);
+    DataResult<AddTopicVo> add(TopicForm form, String authorId);
 
     /**
      * ...
@@ -27,7 +28,7 @@ public interface TopicService {
      * @param page page number
      * @return ...
      */
-    List<TopicListItem> list(int page);
+    DataResult<TopicListVo> list(int page);
 
     /**
      * ...
@@ -35,29 +36,25 @@ public interface TopicService {
      * @param topicId ...
      * @return ...
      */
-    TopicVo get(String topicId);
+    DataResult<TopicVo> get(String topicId);
 
     /**
      * ...
      *
      * @param form   ...
      * @param userId ...
+     * @return ...
      */
-    void modify(TopicModifyForm form, String userId);
+    NoDataResult modify(TopicModifyForm form, String userId);
 
     /**
      * ...
      *
      * @param topicId ...
      * @param userId  ...
-     */
-    void remove(String topicId, String userId);
-
-    /**
-     * ...
-     *
      * @return ...
      */
-    Integer total();
+    NoDataResult remove(String topicId, String userId);
+
 
 }

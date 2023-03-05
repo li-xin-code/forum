@@ -1,7 +1,6 @@
 package com.lixin.campusforum;
 
 import com.lixin.campusforum.model.form.CommentForm;
-import com.lixin.campusforum.model.form.ReplyForm;
 import com.lixin.campusforum.service.CommentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,16 +25,6 @@ public class CommentServiceTest {
         form.setContent("评论");
         form.setTopicId("XRTMuPwX");
         commentService.comment(form, author);
-    }
-
-    @Test
-    public void replyTest() {
-        ReplyForm form = new ReplyForm();
-        String author = "6PKSv8XZ";
-        form.setContent("回复");
-        form.setTopicId("XRTMuPwX");
-        form.setCommentId("JqfGdDxH");
-        commentService.reply(form, author);
     }
 
     @Test

@@ -1,9 +1,11 @@
 package com.lixin.campusforum.dao;
 
-import com.lixin.campusforum.model.bo.TopicBo;
-import com.lixin.campusforum.model.bo.TopicListItem;
-import com.lixin.campusforum.model.bo.TopicModifyBo;
+import com.lixin.campusforum.model.bo.topic.TopicBo;
+import com.lixin.campusforum.model.bo.topic.TopicListBoItem;
+import com.lixin.campusforum.model.bo.topic.TopicModifyBo;
+import com.lixin.campusforum.model.entity.TopicDo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public interface TopicDao {
      * @param topic ..
      * @return rows
      */
-    int insert(TopicBo topic);
+    int insert(TopicDo topic);
 
     /**
      * ...
@@ -29,7 +31,7 @@ public interface TopicDao {
      * @param topicId ...
      * @return ...
      */
-    TopicBo one(String topicId);
+    TopicBo one(@Param("topicId") String topicId);
 
     /**
      * ...
@@ -41,12 +43,9 @@ public interface TopicDao {
     /**
      * ...
      *
-     * @param offset 偏移位
-     * @param rows   行数
      * @return list
      */
-    List<TopicListItem> list(int offset, int rows);
-
+    List<TopicListBoItem> list();
 
     /**
      * ...

@@ -1,22 +1,30 @@
 package com.lixin.campusforum.service.impl;
 
-import com.lixin.campusforum.common.config.PageConfig;
+import com.github.pagehelper.PageHelper;
+import com.lixin.campusforum.common.exception.ForumSystemException;
 import com.lixin.campusforum.common.exception.NotExpectedException;
-import com.lixin.campusforum.common.exception.SystemException;
-import com.lixin.campusforum.common.utils.SystemUtils;
+import com.lixin.campusforum.common.result.DataResult;
+import com.lixin.campusforum.common.result.NoDataResult;
+import com.lixin.campusforum.common.utils.ForumSystemUtils;
+import com.lixin.campusforum.common.utils.ResultUtils;
+import com.lixin.campusforum.config.PageConfig;
 import com.lixin.campusforum.dao.CommentDao;
-import com.lixin.campusforum.model.bo.AddCommentBo;
 import com.lixin.campusforum.model.bo.CommentBo;
+import com.lixin.campusforum.model.entity.CommentDo;
 import com.lixin.campusforum.model.form.CommentForm;
-import com.lixin.campusforum.model.form.ReplyForm;
-import com.lixin.campusforum.model.vo.CommentVo;
-import com.lixin.campusforum.model.vo.ReplyVo;
+import com.lixin.campusforum.model.vo.comment.CommentListVo;
+import com.lixin.campusforum.model.vo.comment.CommentVo;
+import com.lixin.campusforum.model.vo.comment.ReplyVo;
 import com.lixin.campusforum.service.CommentService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author lixin
@@ -33,84 +41,75 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentVo> list(String topicId, int page) {
-        Integer rows = pageConfig.getComment();
-        int offset = rows * (page - 1);
-        List<CommentBo> list = commentDao.list(topicId, offset, rows);
-        List<CommentVo> commentVos = new ArrayList<>(rows);
-        list.forEach(c -> commentVos.add(b2v(c)));
-        return commentVos;
+    public DataResult<CommentListVo> list(String topicId, int page) {
+        PageHelper.startPage(page, pageConfig.getCommentPageSize());
+        List<CommentBo> commentBos = Optional.ofNullable(commentDao.list(topicId))
+                .orElse(Collections.emptyList());
+        List<CommentVo> list = commentBos
+                .stream().map(CommentServiceImpl::b2v).collect(Collectors.toList());
+        CommentListVo result = new CommentListVo();
+        ForumSystemUtils.configPageInfo(result, commentBos);
+        result.setList(list);
+        return ResultUtils.ok(result);
     }
 
     @Override
-    public void comment(CommentForm form, String authorId) {
-        AddCommentBo commentBo = new AddCommentBo();
-        commentBo.setContent(form.getContent());
-        commentBo.setTopicId(form.getTopicId());
-        commentBo.setAuthorId(authorId);
-        commentBo.setReplyId("");
-        commentBo.setReplyAuthor("");
-        String commentId = SystemUtils.uuid();
-        commentBo.setCommentId(commentId);
-        commentBo.setCreateTime(LocalDateTime.now());
-        int rows = commentDao.insert(commentBo);
+    public NoDataResult comment(CommentForm form, String authorId) {
+        String replyCommentId = Optional.ofNullable(form.getReplyCommentId()).orElse("");
+        CommentDo commentDo = build(form, authorId);
+        if (StringUtils.hasLength(replyCommentId)) {
+            String author = Optional.ofNullable(commentDao.one(replyCommentId))
+                    .map(CommentBo::getAuthor)
+                    .orElseThrow(() -> new NotExpectedException("reply target is not exists."));
+            commentDo.setReplyCommentId(replyCommentId);
+            commentDo.setReplyCommentAuthor(author);
+        } else {
+            commentDo.setReplyCommentId("");
+            commentDo.setReplyCommentAuthor("");
+        }
+        LocalDateTime time = LocalDateTime.now();
+        commentDo.setCreateTime(time);
+        commentDo.setModifyTime(time);
+        int rows = commentDao.insert(commentDo);
         if (rows != 1) {
             throw new NotExpectedException("affected rows should 1 but " + rows);
         }
+        return ResultUtils.ok();
     }
 
     @Override
-    public void reply(ReplyForm form, String authorId) {
-        CommentBo bo = commentDao.one(form.getCommentId());
-        if (bo == null) {
-            throw new NotExpectedException("reply target is not exists.");
-        }
-        AddCommentBo commentBo = new AddCommentBo();
-        commentBo.setContent(form.getContent());
-        commentBo.setTopicId(form.getTopicId());
-        commentBo.setReplyId(form.getCommentId());
-        commentBo.setReplyAuthor(bo.getAuthor());
-        commentBo.setAuthorId(authorId);
-        String commentId = SystemUtils.uuid();
-        commentBo.setCommentId(commentId);
-        commentBo.setCreateTime(LocalDateTime.now());
-        int rows = commentDao.insert(commentBo);
-        if (rows != 1) {
-            throw new NotExpectedException("affected rows should 1 but " + rows);
-        }
-    }
-
-    @Override
-    public void remove(String commentId, String userId) {
+    public NoDataResult remove(String commentId, String userId) {
         CommentBo bo = commentDao.one(commentId);
         if (bo == null) {
             throw new NotExpectedException("comment not found.");
         }
         if (bo.getAuthorId().equals(userId)) {
-            int rows = commentDao.delete(commentId);
+            int rows = commentDao.delete(commentId, userId);
             if (rows < 1) {
                 throw new NotExpectedException("affected rows should more than the 1 but " + rows);
             }
         } else {
-            throw new SystemException("remove comment fail: Actions do not come from the author.");
+            throw new ForumSystemException("remove comment fail: Actions do not come from the author.");
         }
-
+        return ResultUtils.ok();
     }
 
-    @Override
-    public Integer total(String topicId) {
-        return commentDao.count(topicId);
+    private CommentDo build(CommentForm form, String authorId) {
+        CommentDo commentDo = new CommentDo();
+        commentDo.setContent(form.getContent());
+        commentDo.setTopicId(form.getTopicId());
+        commentDo.setAuthorId(authorId);
+        String commentId = ForumSystemUtils.uuid();
+        commentDo.setCommentId(commentId);
+        commentDo.setCreateTime(LocalDateTime.now());
+        return commentDo;
     }
 
-    private CommentVo b2v(CommentBo bo) {
-        CommentVo vo = bo.getReplyId().isEmpty() ? new CommentVo() :
-                new ReplyVo().setReplyId(bo.getReplyId()).
-                        setReplyAuthor(bo.getReplyAuthor());
-        vo.setCommentId(bo.getCommentId());
-        vo.setContent(bo.getContent());
-        vo.setAuthorId(bo.getAuthorId());
-        vo.setAuthor(bo.getAuthor());
-        vo.setCreateTime(bo.getCreateTime());
+    private static CommentVo b2v(CommentBo bo) {
+        String replyId = Optional.ofNullable(bo.getReplyCommentId()).orElse("");
+        CommentVo vo = replyId.isEmpty() ? new CommentVo() :
+                new ReplyVo(bo.getReplyCommentId(), bo.getReplyCommentAuthor());
+        BeanUtils.copyProperties(bo, vo);
         return vo;
     }
 }

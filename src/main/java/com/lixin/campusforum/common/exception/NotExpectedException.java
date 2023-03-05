@@ -5,10 +5,10 @@ package com.lixin.campusforum.common.exception;
  *
  * @author lixin
  */
-public class NotExpectedException extends SystemException {
+public class NotExpectedException extends ForumSystemException {
     private static final long serialVersionUID = 2286315431277788316L;
 
     public NotExpectedException(String message) {
-        super("NotExpectedException:" + message);
+        super(message);
     }
 }

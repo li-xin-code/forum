@@ -1,6 +1,6 @@
 package com.lixin.campusforum.model.form;
 
-import com.lixin.campusforum.utils.UserUtils;
+import com.lixin.campusforum.common.constant.consist.UserConstant;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -13,11 +13,11 @@ import javax.validation.constraints.Pattern;
 public class ResetPasswordForm {
 
     @NotBlank(message = "密码不可为空")
-    @Pattern(regexp = UserUtils.PASSWORD_FORMAT, message = "密码格式错误")
+    @Pattern(regexp = UserConstant.PASSWORD_FORMAT, message = "密码格式错误")
     private String password;
 
     @NotBlank(message = "重复密码不可为空")
-    @Pattern(regexp = UserUtils.PASSWORD_FORMAT, message = "重复密码格式错误")
+    @Pattern(regexp = UserConstant.PASSWORD_FORMAT, message = "重复密码格式错误")
     private String repeatPassword;
 
 }

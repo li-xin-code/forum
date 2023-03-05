@@ -1,13 +1,13 @@
 package com.lixin.campusforum.controller;
 
 import com.lixin.campusforum.common.annotation.LoginRequired;
-import com.lixin.campusforum.common.exception.SystemException;
+import com.lixin.campusforum.common.exception.ForumSystemException;
+import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.common.result.NoDataResult;
-import com.lixin.campusforum.common.result.Result;
-import com.lixin.campusforum.common.utils.ResultUtils;
 import com.lixin.campusforum.model.form.RenameForm;
 import com.lixin.campusforum.model.form.ResetPasswordForm;
-import com.lixin.campusforum.model.vo.UserVo;
+import com.lixin.campusforum.model.vo.user.UserInfoVo;
+import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
 import com.lixin.campusforum.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,26 +32,21 @@ public class UserController {
 
     @LoginRequired
     @GetMapping("/info")
-    public Result<UserVo> userInfo(@RequestHeader("token") String token) {
+    public DataResult<UserInfoVo> userInfo(@RequestHeader("token") String token) {
         UserVo user = tokenService.getData(token);
-        return ResultUtils.ok("user", user);
+        return userService.userInfo(user.getUserId());
     }
 
-    @GetMapping("/exist/{name}")
-    public Result<Boolean> username(@PathVariable String name) {
-        Boolean exist = userService.nameExist(name);
-        return ResultUtils.ok("exist", exist);
+    @GetMapping("/name_available")
+    public NoDataResult available(@RequestParam String name) {
+        return userService.nameAvailable(name);
     }
 
     @LoginRequired
     @PutMapping("/rename")
-    public NoDataResult rename(@Validated @RequestBody RenameForm rename,
-                               @RequestHeader("token") String token) {
-        UserVo user = tokenService.getData(token);
-        String newName = rename.getName();
-        user = userService.rename(newName, user.getUuid());
-        tokenService.update(token, user);
-        return ResultUtils.okNoData();
+    public DataResult<UserVo> rename(@Validated @RequestBody RenameForm rename,
+                                     @RequestHeader("token") String token) {
+        return userService.rename(rename.getName(), token);
     }
 
     @LoginRequired
@@ -61,10 +56,9 @@ public class UserController {
         UserVo user = tokenService.getData(token);
         String password = form.getPassword();
         if (!password.equals(form.getRepeatPassword())) {
-            throw new SystemException("password and the repeat password do not match.");
+            throw new ForumSystemException("password and the repeat password do not match.");
         }
-        userService.resetPassword(password, user.getUuid());
-        return ResultUtils.okNoData();
+        return userService.resetPassword(password, user.getUserId());
     }
 
 }

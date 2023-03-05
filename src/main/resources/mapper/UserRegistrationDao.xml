@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lixin.campusforum.dao.UserRegistrationDao">
+
+    <insert id="insert" parameterType="com.lixin.campusforum.model.entity.UserRegistrationDo">
+        insert into user_registration(user_id, username, password, create_time)
+            value (#{userId}, #{username}, #{password}, #{createTime});
+    </insert>
+
+    <update id="updateName">
+        update user_registration
+        set username = #{name}
+        where user_id = #{userId}
+    </update>
+
+    <update id="updatePassword">
+        update user_registration
+        set password = #{password}
+        where user_id = #{userId}
+    </update>
+
+    <select id="selectCountByUsername" resultType="java.lang.Integer">
+        select count(*)
+        from user_registration
+        where username = #{username};
+    </select>
+
+    <select id="find" resultType="com.lixin.campusforum.model.entity.UserRegistrationDo">
+        select username, password, user_id
+        from user_registration
+        where username = #{username}
+        limit 1;
+    </select>
+
+    <select id="findByUserId"
+            resultType="com.lixin.campusforum.model.entity.UserRegistrationDo">
+        select username, password, user_id
+        from user_registration
+        where user_id = #{userId}
+        limit 1;
+    </select>
+
+    <select id="selectUserInfo" resultType="com.lixin.campusforum.model.bo.user.UserInfoBo">
+        select ur.user_id, ur.username, ui.gender, ui.face, ui.user_sign, ur.create_time
+        from user_registration ur
+                 inner join user_info ui on ur.user_id = ui.user_id
+        where ur.user_id = #{userId}
+    </select>
+
+</mapper>

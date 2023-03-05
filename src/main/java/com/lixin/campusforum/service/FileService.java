@@ -1,5 +1,7 @@
 package com.lixin.campusforum.service;
 
+import com.lixin.campusforum.common.result.DataResult;
+import com.lixin.campusforum.model.vo.FileUploadVo;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -10,8 +12,7 @@ public interface FileService {
      * ...
      *
      * @param file file
-     * @param path path
      * @return path
      */
-    String save(MultipartFile file, String path);
+    DataResult<FileUploadVo> save(MultipartFile file);
 }

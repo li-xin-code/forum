@@ -1,10 +1,9 @@
 package com.lixin.campusforum.service;
 
+import com.lixin.campusforum.common.result.DataResult;
+import com.lixin.campusforum.common.result.NoDataResult;
 import com.lixin.campusforum.model.form.CommentForm;
-import com.lixin.campusforum.model.form.ReplyForm;
-import com.lixin.campusforum.model.vo.CommentVo;
-
-import java.util.List;
+import com.lixin.campusforum.model.vo.comment.CommentListVo;
 
 /**
  * @author lixin
@@ -14,41 +13,27 @@ public interface CommentService {
     /**
      * 评论列表
      *
-     * @param page    ...
      * @param topicId ...
+     * @param page    ...
      * @return ...
      */
-    List<CommentVo> list(String topicId, int page);
+    DataResult<CommentListVo> list(String topicId, int page);
 
     /**
      * 评论
      *
      * @param form     ...
      * @param authorId ...
+     * @return result
      */
-    void comment(CommentForm form, String authorId);
-
-    /**
-     * 回复
-     *
-     * @param form     ...
-     * @param authorId ...
-     */
-    void reply(ReplyForm form, String authorId);
+    NoDataResult comment(CommentForm form, String authorId);
 
     /**
      * ...
      *
      * @param commentId ...
      * @param userId    ...
+     * @return result
      */
-    void remove(String commentId, String userId);
-
-    /**
-     * ...
-     *
-     * @param topicId ...
-     * @return ...
-     */
-    Integer total(String topicId);
+    NoDataResult remove(String commentId, String userId);
 }

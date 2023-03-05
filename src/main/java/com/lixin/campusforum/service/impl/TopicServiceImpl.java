@@ -1,21 +1,35 @@
 package com.lixin.campusforum.service.impl;
 
-import com.lixin.campusforum.common.config.PageConfig;
+import com.github.pagehelper.PageHelper;
+import com.lixin.campusforum.common.exception.ForumSystemException;
 import com.lixin.campusforum.common.exception.NotExpectedException;
-import com.lixin.campusforum.common.exception.SystemException;
-import com.lixin.campusforum.common.utils.SystemUtils;
+import com.lixin.campusforum.common.result.DataResult;
+import com.lixin.campusforum.common.result.NoDataResult;
+import com.lixin.campusforum.common.utils.ForumSystemUtils;
+import com.lixin.campusforum.common.utils.ResultUtils;
+import com.lixin.campusforum.config.PageConfig;
+import com.lixin.campusforum.dao.CommentDao;
 import com.lixin.campusforum.dao.TopicDao;
-import com.lixin.campusforum.model.bo.TopicBo;
-import com.lixin.campusforum.model.bo.TopicListItem;
-import com.lixin.campusforum.model.bo.TopicModifyBo;
+import com.lixin.campusforum.model.bo.topic.TopicBo;
+import com.lixin.campusforum.model.bo.topic.TopicListBoItem;
+import com.lixin.campusforum.model.bo.topic.TopicModifyBo;
+import com.lixin.campusforum.model.entity.TopicDo;
 import com.lixin.campusforum.model.form.TopicForm;
 import com.lixin.campusforum.model.form.TopicModifyForm;
-import com.lixin.campusforum.model.vo.TopicVo;
+import com.lixin.campusforum.model.vo.topic.AddTopicVo;
+import com.lixin.campusforum.model.vo.topic.TopicListVo;
+import com.lixin.campusforum.model.vo.topic.TopicListVoItem;
+import com.lixin.campusforum.model.vo.topic.TopicVo;
 import com.lixin.campusforum.service.TopicService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
+import static com.lixin.campusforum.common.utils.ForumSystemUtils.dateFormat;
 
 /**
  * @author lixin
@@ -25,77 +39,86 @@ public class TopicServiceImpl implements TopicService {
 
     private final TopicDao topicDao;
     private final PageConfig pageConfig;
+    private final CommentDao commentDao;
 
-    public TopicServiceImpl(TopicDao topicDao, PageConfig pageConfig) {
+    public TopicServiceImpl(TopicDao topicDao, PageConfig pageConfig, CommentDao commentDao) {
         this.topicDao = topicDao;
         this.pageConfig = pageConfig;
+        this.commentDao = commentDao;
     }
 
     @Override
-    public String add(TopicForm form, String authorId) {
-        TopicBo topic = new TopicBo();
-        String topicId = SystemUtils.uuid();
+    public DataResult<AddTopicVo> add(TopicForm form, String authorId) {
+        TopicDo topic = new TopicDo();
+        String topicId = ForumSystemUtils.uuid();
         topic.setTopicId(topicId);
         topic.setAuthorId(authorId);
         topic.setTitle(form.getTitle());
         topic.setContent(form.getContent());
         LocalDateTime now = LocalDateTime.now();
         topic.setCreateTime(now);
+        topic.setModifyTime(now);
         int rows = topicDao.insert(topic);
         if (rows != 1) {
             throw new NotExpectedException("affected rows should 1 but " + rows);
         }
-        return topicId;
+        AddTopicVo vo = new AddTopicVo();
+        vo.setTopicId(topicId);
+        return ResultUtils.ok(vo);
     }
 
     @Override
-    public List<TopicListItem> list(int page) {
-        Integer rows = pageConfig.getTopic();
-        int offset = page > 0 ? rows * (page - 1) : 0;
-        return topicDao.list(offset, rows);
+    public DataResult<TopicListVo> list(int page) {
+        PageHelper.startPage(page, pageConfig.getTopicPageSize());
+        List<TopicListBoItem> bos = topicDao.list();
+        TopicListVo vo = new TopicListVo();
+        ForumSystemUtils.configPageInfo(vo, bos);
+        List<TopicListVoItem> list = ForumSystemUtils.easyCopy(bos, TopicListVoItem.class);
+        vo.setList(list);
+        return ResultUtils.ok(vo);
     }
 
     @Override
-    public TopicVo get(String topicId) {
-        TopicBo bo = topicDao.one(topicId);
-        if (bo == null) {
-            throw new NotExpectedException("topic not found.");
-        }
-        return b2v(bo);
+    public DataResult<TopicVo> get(String topicId) {
+        TopicBo bo = Optional.ofNullable(topicDao.one(topicId))
+                .orElseThrow(() -> new NotExpectedException("topic not found."));
+        return ResultUtils.ok(b2v(bo));
     }
 
     @Override
-    public void modify(TopicModifyForm form, String userId) {
-        TopicVo topic = get(form.getTopicId());
-        if (!topic.getAuthorId().equals(userId)) {
+    public NoDataResult modify(TopicModifyForm form, String userId) {
+        TopicBo bo = Optional.ofNullable(topicDao.one(form.getTopicId()))
+                .orElseThrow(() -> new NotExpectedException("topic not found."));
+        if (!bo.getAuthorId().equals(userId)) {
             throw new NotExpectedException("Only the author can modify the topic.");
         }
         TopicModifyBo modify = new TopicModifyBo();
         modify.setTopicId(form.getTopicId());
         modify.setTitle(form.getTitle());
         modify.setContent(form.getContent());
+        modify.setModifyTime(LocalDateTime.now());
         int rows = topicDao.update(modify);
         if (rows != 1) {
             throw new NotExpectedException("update result is not 1.");
         }
+        return ResultUtils.ok();
     }
 
     @Override
-    public void remove(String topicId, String userId) {
-        TopicVo topic = get(topicId);
-        if (topic.getAuthorId().equals(userId)) {
+    @Transactional(rollbackFor = Exception.class)
+    public NoDataResult remove(String topicId, String userId) {
+        TopicBo bo = Optional.ofNullable(topicDao.one(topicId))
+                .orElseThrow(() -> new NotExpectedException("topic not found."));
+        if (bo.getAuthorId().equals(userId)) {
             int rows = topicDao.delete(topicId);
             if (rows != 1) {
                 throw new NotExpectedException("affected rows should 1 but " + rows);
             }
+            commentDao.deleteByTopicId(topicId);
         } else {
-            throw new SystemException("remove topic fail: Actions do not come from the author.");
+            throw new ForumSystemException("remove topic fail: Actions do not come from the author.");
         }
-    }
-
-    @Override
-    public Integer total() {
-        return topicDao.count();
+        return ResultUtils.ok();
     }
 
     private TopicVo b2v(TopicBo bo) {
@@ -103,12 +126,9 @@ public class TopicServiceImpl implements TopicService {
             return null;
         }
         TopicVo vo = new TopicVo();
-        vo.setTopicId(bo.getTopicId());
-        vo.setTitle(bo.getTitle());
-        vo.setContent(bo.getContent());
-        vo.setCreateTime(SystemUtils.dateFormat(bo.getCreateTime()));
-        vo.setAuthor(bo.getAuthor());
-        vo.setAuthorId(bo.getAuthorId());
+        BeanUtils.copyProperties(bo, vo);
+        vo.setCreateTime(dateFormat(bo.getCreateTime()));
+        vo.setModifyTime(dateFormat(bo.getModifyTime()));
         return vo;
     }
 }

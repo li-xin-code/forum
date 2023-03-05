@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lixin.campusforum.dao.TopicDao">
+
+    <insert id="insert">
+        insert into topic(topic_id, author_id, title, content, create_time, modify_time)
+            value (#{topicId}, #{authorId}, #{title}, #{content}, #{createTime}, #{modifyTime});
+    </insert>
+
+    <update id="update">
+        update topic
+        set title       = #{title},
+            content     = #{content},
+            modify_time = #{modifyTime}
+        where topic_id = #{topicId}
+    </update>
+
+    <delete id="delete">
+        delete
+        from topic
+        where topic_id = #{topicId}
+    </delete>
+
+    <select id="one" resultType="com.lixin.campusforum.model.bo.topic.TopicBo">
+        select t.topic_id,
+               username               as author,
+               ur.user_id             as author_id,
+               title,
+               t.content,
+               t.create_time,
+               t.modify_time,
+               ifnull(count(c.id), 0) as comment_total
+        from topic t
+                 inner join user_registration ur on ur.user_id = t.author_id
+                 left join comment c on t.topic_id = c.topic_id
+        where t.topic_id = #{topicId}
+        group by t.topic_id
+    </select>
+
+    <select id="list" resultType="com.lixin.campusforum.model.bo.topic.TopicListBoItem">
+        select t.topic_id,
+               username               as author,
+               title,
+               t.create_time,
+               t.modify_time,
+               ifnull(count(c.id), 0) as comment_total
+        from topic t
+                 inner join user_registration ur on ur.user_id = t.author_id
+                 left join comment c on t.topic_id = c.topic_id
+        group by t.topic_id, t.create_time
+        order by t.create_time desc
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*)
+        from topic;
+    </select>
+
+</mapper>

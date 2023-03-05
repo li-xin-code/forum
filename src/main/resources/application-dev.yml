@@ -5,7 +5,7 @@ spring:
   application:
     name: forum
   datasource:
-    url: "jdbc:mysql://localhost:3306/common_db?
+    url: "jdbc:mysql://localhost:3306/forum?
     serverTimezone=Asia/Shanghai&
     useUnicode=true&
     characterEncoding=UTF-8"
@@ -18,14 +18,15 @@ spring:
       max-request-size: 30MB
   web:
     resources:
-      static-locations: file:${forum.upload.image-path}
+      static-locations: file:${forum.upload.image-path},classpath:/static/
 
 forum:
   page:
-    topic: 10
-    comment: 6
+    topic-page-size: 10
+    comment-page-size: 6
   upload:
     image-path: /Users/lixin/Downloads/forum/img
+  default-face: "default.jpeg"
 
 mybatis:
   configuration:

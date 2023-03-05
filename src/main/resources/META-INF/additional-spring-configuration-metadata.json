@@ -16,6 +16,11 @@
       "name": "forum.upload.image-path",
       "type": "java.lang.String",
       "description": "Description for forum.upload.image-path."
+    },
+    {
+      "name": "forum.default-face",
+      "type": "java.lang.String",
+      "description": "Description for forum.default-face."
     }
   ]
 }
