@@ -4,8 +4,10 @@ import com.lixin.campusforum.common.annotation.LoginRequired;
 import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.model.form.LoginForm;
 import com.lixin.campusforum.model.form.RegisterForm;
+import com.lixin.campusforum.model.query.SearchQuery;
 import com.lixin.campusforum.model.vo.FileUploadVo;
 import com.lixin.campusforum.model.vo.LoginVo;
+import com.lixin.campusforum.model.vo.search.SearchResultVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.FileService;
 import com.lixin.campusforum.service.UserService;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  * @author lixin
@@ -43,6 +46,13 @@ public class ForumSystemController {
     @PostMapping("/upload")
     public DataResult<FileUploadVo> upload(@RequestParam MultipartFile file) {
         return fileService.save(file);
+    }
+
+    @GetMapping("/search")
+    public DataResult<SearchResultVo> search(SearchQuery query) {
+        System.out.println(query);
+        // todo 总查询
+        return null;
     }
 
 }

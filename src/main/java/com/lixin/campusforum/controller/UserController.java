@@ -1,11 +1,14 @@
 package com.lixin.campusforum.controller;
 
 import com.lixin.campusforum.common.annotation.LoginRequired;
+import com.lixin.campusforum.common.exception.AuthenticationException;
 import com.lixin.campusforum.common.exception.ForumSystemException;
 import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.common.result.NoDataResult;
+import com.lixin.campusforum.common.utils.ResultUtils;
 import com.lixin.campusforum.model.form.RenameForm;
 import com.lixin.campusforum.model.form.ResetPasswordForm;
+import com.lixin.campusforum.model.form.UserInfoModifyForm;
 import com.lixin.campusforum.model.vo.user.UserInfoVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
@@ -13,6 +16,8 @@ import com.lixin.campusforum.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 /**
  * @author lixin
@@ -32,9 +37,20 @@ public class UserController {
 
     @LoginRequired
     @GetMapping("/info")
-    public DataResult<UserInfoVo> userInfo(@RequestHeader("token") String token) {
-        UserVo user = tokenService.getData(token);
-        return userService.userInfo(user.getUserId());
+    public DataResult<UserInfoVo> userInfo(@RequestParam(required = false) String userId, @RequestHeader String token) {
+        String id = Optional.ofNullable(userId)
+                .orElseGet(() ->
+                        Optional.ofNullable(tokenService.getData(token))
+                                .map(UserVo::getUserId)
+                                .orElseThrow(() -> new AuthenticationException("token expired.")));
+        return userService.userInfo(id);
+    }
+
+    @LoginRequired
+    @PutMapping("/info")
+    public NoDataResult modifyUserInfo(@RequestBody UserInfoModifyForm form, @RequestHeader String token) {
+        // todo 修改用户信息
+        return ResultUtils.ok();
     }
 
     @GetMapping("/name_available")

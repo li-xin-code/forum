@@ -6,6 +6,7 @@ import com.lixin.campusforum.common.result.NoDataResult;
 import com.lixin.campusforum.model.form.TopicForm;
 import com.lixin.campusforum.model.form.TopicModifyForm;
 import com.lixin.campusforum.model.vo.topic.AddTopicVo;
+import com.lixin.campusforum.model.vo.topic.RelatedMeVo;
 import com.lixin.campusforum.model.vo.topic.TopicListVo;
 import com.lixin.campusforum.model.vo.topic.TopicVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
@@ -61,6 +62,11 @@ public class TopicController {
                                @RequestHeader String token) {
         UserVo user = tokenService.getData(token);
         return topicService.modify(form, user.getUserId());
+    }
+
+    public DataResult<RelatedMeVo> relatedMe(@RequestHeader String token) {
+        // todo 与我相关内容，话题
+        return null;
     }
 
 }
