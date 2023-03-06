@@ -5,7 +5,6 @@ import com.lixin.campusforum.common.exception.AuthenticationException;
 import com.lixin.campusforum.common.exception.ForumSystemException;
 import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.common.result.NoDataResult;
-import com.lixin.campusforum.common.utils.ResultUtils;
 import com.lixin.campusforum.model.form.RenameForm;
 import com.lixin.campusforum.model.form.ResetPasswordForm;
 import com.lixin.campusforum.model.form.UserInfoModifyForm;
@@ -49,8 +48,8 @@ public class UserController {
     @LoginRequired
     @PutMapping("/info")
     public NoDataResult modifyUserInfo(@RequestBody UserInfoModifyForm form, @RequestHeader String token) {
-        // todo 修改用户信息
-        return ResultUtils.ok();
+        UserVo userVo = tokenService.getData(token);
+        return userService.modifyUserInfo(form, userVo.getUserId());
     }
 
     @GetMapping("/name_available")
@@ -68,7 +67,7 @@ public class UserController {
     @LoginRequired
     @PutMapping("/reset-password")
     public NoDataResult resetPassword(@Validated @RequestBody ResetPasswordForm form,
-                                      @RequestHeader("token") String token) {
+                                      @RequestHeader String token) {
         UserVo user = tokenService.getData(token);
         String password = form.getPassword();
         if (!password.equals(form.getRepeatPassword())) {

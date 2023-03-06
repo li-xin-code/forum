@@ -67,4 +67,12 @@ public interface UserInfoDao {
      **/
     int updateByPrimaryKey(UserInfoDo record);
 
+    /**
+     * updateByUserId
+     *
+     * @param infoDo ...
+     * @return int
+     * @date 2023/3/6 23:52
+     **/
+    int updateByUserId(UserInfoDo infoDo);
 }

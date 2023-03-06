@@ -1,20 +1,23 @@
 package com.lixin.campusforum.common.utils;
 
 import com.github.pagehelper.PageInfo;
+import com.lixin.campusforum.common.exception.ForumSystemException;
 import com.lixin.campusforum.model.base.BasePageResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author lixin
  */
+@Slf4j
 public final class ForumSystemUtils {
 
     private ForumSystemUtils() {
@@ -96,4 +99,26 @@ public final class ForumSystemUtils {
         configPageInfo(response, new PageInfo<>(list));
     }
 
+    public static boolean isEmpty(Object o) {
+        Objects.requireNonNull(o);
+        Class<?> type = o.getClass();
+        Field[] fields = type.getDeclaredFields();
+        if (fields.length == 0) {
+            return false;
+        }
+        List<Boolean> list = Arrays.stream(fields)
+                .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                .map(field -> {
+                    field.setAccessible(true);
+                    try {
+                        Object val = field.get(o);
+                        return Objects.isNull(val);
+                    } catch (IllegalAccessException e) {
+                        log.error(e.getMessage());
+                        throw new ForumSystemException(e.getMessage());
+                    }
+                }).collect(Collectors.toList());
+        System.out.println(list);
+        return list.stream().allMatch(b -> b);
+    }
 }

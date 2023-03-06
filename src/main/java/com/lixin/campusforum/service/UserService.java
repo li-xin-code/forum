@@ -4,6 +4,7 @@ import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.common.result.NoDataResult;
 import com.lixin.campusforum.model.form.LoginForm;
 import com.lixin.campusforum.model.form.RegisterForm;
+import com.lixin.campusforum.model.form.UserInfoModifyForm;
 import com.lixin.campusforum.model.vo.LoginVo;
 import com.lixin.campusforum.model.vo.user.UserInfoVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
@@ -65,4 +66,14 @@ public interface UserService {
      * @date 2023/3/4 19:21
      **/
     DataResult<UserInfoVo> userInfo(String userId);
+
+    /**
+     * modifyUserInfo
+     *
+     * @param form   ...
+     * @param userId ...
+     * @return com.lixin.campusforum.common.result.NoDataResult
+     * @date 2023/3/6 23:49
+     **/
+    NoDataResult modifyUserInfo(UserInfoModifyForm form, String userId);
 }

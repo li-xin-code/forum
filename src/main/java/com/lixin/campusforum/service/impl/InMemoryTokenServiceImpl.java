@@ -2,12 +2,14 @@ package com.lixin.campusforum.service.impl;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.lixin.campusforum.common.exception.AuthenticationException;
 import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +35,8 @@ public class InMemoryTokenServiceImpl implements TokenService<UserVo> {
 
     @Override
     public UserVo getData(String token) {
-        return tokenCache.getIfPresent(token);
+        return Optional.ofNullable(tokenCache.getIfPresent(token))
+                .orElseThrow(() -> new AuthenticationException("token expired."));
     }
 
     @Override

@@ -15,6 +15,7 @@ public final class ResultUtils {
     private static final int DEFAULT_SUCCESS_CODE = ResultCodeEnums.SUCCESS.getCode();
     private static final int DEFAULT_FAIL_CODE = ResultCodeEnums.FAIL.getCode();
     private static final String DEFAULT_SUCCESS_MSG = "ok";
+    private static final String DEFAULT_FAIL_MSG = "fail";
 
     public static NoDataResult ok() {
         return buildNoDataResult(DEFAULT_SUCCESS_CODE, DEFAULT_SUCCESS_MSG);
@@ -22,6 +23,10 @@ public final class ResultUtils {
 
     public static NoDataResult fail(String msg) {
         return buildNoDataResult(DEFAULT_FAIL_CODE, msg);
+    }
+
+    public static NoDataResult fail() {
+        return buildNoDataResult(DEFAULT_FAIL_CODE, DEFAULT_FAIL_MSG);
     }
 
     public static <T> DataResult<T> ok(T data) {

@@ -17,6 +17,7 @@ import com.lixin.campusforum.model.entity.UserInfoDo;
 import com.lixin.campusforum.model.entity.UserRegistrationDo;
 import com.lixin.campusforum.model.form.LoginForm;
 import com.lixin.campusforum.model.form.RegisterForm;
+import com.lixin.campusforum.model.form.UserInfoModifyForm;
 import com.lixin.campusforum.model.vo.LoginVo;
 import com.lixin.campusforum.model.vo.user.UserInfoVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -148,6 +150,21 @@ public class UserServiceImpl implements UserService {
                 .orElse(UserGenderEnums.UNKNOWN);
         infoVo.setGender(gender.getDescription());
         return ResultUtils.ok(infoVo);
+    }
+
+    @Override
+    public NoDataResult modifyUserInfo(UserInfoModifyForm form, String userId) {
+        if (Objects.isNull(userId)) {
+            throw new NotExpectedException("userId can not be null.");
+        }
+        if (ForumSystemUtils.isEmpty(form)) {
+            throw new ForumSystemException("all property is null");
+        }
+        UserInfoDo userInfoDo = new UserInfoDo();
+        BeanUtils.copyProperties(form, userInfoDo);
+        userInfoDo.setUserId(userId);
+        int row = userInfoDao.updateByUserId(userInfoDo);
+        return row == 1 ? ResultUtils.ok() : ResultUtils.fail();
     }
 
     private boolean nameIsAvailable(String username) {
