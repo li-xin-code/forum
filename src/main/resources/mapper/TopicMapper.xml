@@ -94,4 +94,21 @@
          order by t.create_time desc)
     </select>
 
+    <select id="selectTopicList" resultType="com.lixin.campusforum.model.bo.topic.TopicListItemBo">
+        select t.topic_id,
+               username               as author,
+               ui.face                as face,
+               title,
+               t.create_time,
+               t.modify_time,
+               ifnull(count(c.id), 0) as comment_total
+        from topic t
+                 inner join user_registration ur on ur.user_id = t.author_id
+                 inner join user_info ui on ur.user_id = ui.user_id
+                 left join comment c on t.topic_id = c.topic_id
+        where t.title like concat('%', #{keyword}, '%')
+        group by t.topic_id, t.create_time
+        order by t.create_time desc
+    </select>
+
 </mapper>

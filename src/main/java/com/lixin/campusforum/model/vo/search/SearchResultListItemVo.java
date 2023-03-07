@@ -8,8 +8,8 @@ import lombok.EqualsAndHashCode;
  * @author lixin
  * @date 2023/3/6 00:01
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class SearchResultListItemVo extends BaseVo {
     private static final long serialVersionUID = -5383885527119836958L;
 }

@@ -2,6 +2,7 @@ package com.lixin.campusforum.common.utils;
 
 import com.github.pagehelper.PageInfo;
 import com.lixin.campusforum.common.exception.ForumSystemException;
+import com.lixin.campusforum.model.base.BasePageRequest;
 import com.lixin.campusforum.model.base.BasePageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +13,8 @@ import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +60,7 @@ public final class ForumSystemUtils {
      *
      * @param list  数据源
      * @param clazz 目标对象 class
-     * @param <T>   目标对象 type
+     * @param <T>   目标对象 voListItemType
      * @return list
      */
     public static <T> List<T> easyCopy(List<?> list, Class<T> clazz) {
@@ -66,6 +69,33 @@ public final class ForumSystemUtils {
             result = list.stream().map(item -> {
                 try {
                     T o = clazz.newInstance();
+                    BeanUtils.copyProperties(item, o);
+                    return o;
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toList());
+        }
+        return result;
+    }
+
+    /**
+     * easy copy plus
+     *
+     * @param list     resource list
+     * @param consumer ...
+     * @param clazz    target class
+     * @param <T>      target voListItemType
+     * @param <R>      resource voListItemType
+     * @return target list
+     */
+    public static <T, R> List<T> easyCopy(List<R> list, BiConsumer<T, R> consumer, Class<T> clazz) {
+        List<T> result = Collections.emptyList();
+        if (!CollectionUtils.isEmpty(list)) {
+            result = list.stream().map(item -> {
+                try {
+                    T o = clazz.newInstance();
+                    consumer.accept(o, item);
                     BeanUtils.copyProperties(item, o);
                     return o;
                 } catch (InstantiationException | IllegalAccessException e) {
@@ -120,5 +150,21 @@ public final class ForumSystemUtils {
                 }).collect(Collectors.toList());
         System.out.println(list);
         return list.stream().allMatch(b -> b);
+    }
+
+    /**
+     * build
+     *
+     * @param resultClass          ...
+     * @param resourceListSupplier ...
+     * @param consumer             ...
+     * @param voListItemType       ...
+     * @return com.lixin.campusforum.common.utils.PageQueryTemplate<PR, Q, R, T>
+     * @date 2023/3/8 00:03
+     **/
+    public static <PR extends BasePageResponse, Q extends BasePageRequest, R, T>
+    PageQueryTemplate<PR, Q, R, T> build(Class<PR> resultClass, Supplier<List<R>> resourceListSupplier,
+                                         BiConsumer<T, R> consumer, Class<T> voListItemType) {
+        return new PageQueryTemplate<>(resultClass, resourceListSupplier, consumer, voListItemType);
     }
 }

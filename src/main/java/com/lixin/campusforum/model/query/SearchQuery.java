@@ -1,6 +1,6 @@
 package com.lixin.campusforum.model.query;
 
-import com.lixin.campusforum.model.base.BaseQuery;
+import com.lixin.campusforum.model.base.BasePageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SearchQuery extends BaseQuery {
+public class SearchQuery extends BasePageRequest {
 
     private static final long serialVersionUID = 505508724972078414L;
 

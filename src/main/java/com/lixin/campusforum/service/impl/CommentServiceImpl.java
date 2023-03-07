@@ -16,6 +16,7 @@ import com.lixin.campusforum.model.vo.comment.CommentListVo;
 import com.lixin.campusforum.model.vo.comment.CommentVo;
 import com.lixin.campusforum.model.vo.comment.ReplyVo;
 import com.lixin.campusforum.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -30,15 +31,11 @@ import java.util.stream.Collectors;
  * @author lixin
  */
 @Service("commentService")
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final PageConfig pageConfig;
     private final CommentDao commentDao;
-
-    public CommentServiceImpl(PageConfig pageConfig, CommentDao commentDao) {
-        this.pageConfig = pageConfig;
-        this.commentDao = commentDao;
-    }
 
     @Override
     public DataResult<CommentListVo> list(String topicId, int page) {

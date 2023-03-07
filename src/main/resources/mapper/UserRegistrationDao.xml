@@ -47,4 +47,11 @@
         where ur.user_id = #{userId}
     </select>
 
+    <select id="selectUserInfoBySearch" resultType="com.lixin.campusforum.model.bo.user.UserInfoListItemBo">
+        select ur.user_id, ur.username, ui.gender, ui.face, ui.user_sign, ur.create_time
+        from user_registration ur
+                 inner join user_info ui on ur.user_id = ui.user_id
+        where ur.username like concat('%', #{keyword}, '%')
+    </select>
+
 </mapper>

@@ -24,12 +24,12 @@ import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
 import com.lixin.campusforum.service.UserService;
 import com.lixin.campusforum.utils.UserUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -40,20 +40,13 @@ import static com.lixin.campusforum.common.constant.consist.UserConstant.DEFAULT
  * @author lixin
  */
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRegistrationDao userDao;
     private final TokenService<UserVo> tokenService;
     private final UserInfoDao userInfoDao;
     private final ForumConfig forumConfig;
-
-    public UserServiceImpl(UserRegistrationDao userDao, TokenService<UserVo> tokenService,
-                           UserInfoDao userInfoDao, ForumConfig forumConfig) {
-        this.userDao = userDao;
-        this.tokenService = tokenService;
-        this.userInfoDao = userInfoDao;
-        this.forumConfig = forumConfig;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -143,12 +136,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotExpectedException("用户信息不存在"));
         UserInfoVo infoVo = new UserInfoVo();
         BeanUtils.copyProperties(infoBo, infoVo);
-        EnumSet<UserGenderEnums> genderEnums = EnumSet.allOf(UserGenderEnums.class);
-        UserGenderEnums gender = genderEnums.stream()
-                .filter(item -> infoBo.getGender().equals(item.getCode()))
-                .findFirst()
-                .orElse(UserGenderEnums.UNKNOWN);
-        infoVo.setGender(gender.getDescription());
+        infoVo.setGender(UserGenderEnums.convert(infoBo.getGender()));
         return ResultUtils.ok(infoVo);
     }
 

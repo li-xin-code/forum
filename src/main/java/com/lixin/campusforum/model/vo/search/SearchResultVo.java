@@ -1,6 +1,6 @@
 package com.lixin.campusforum.model.vo.search;
 
-import com.lixin.campusforum.model.base.BaseVo;
+import com.lixin.campusforum.model.base.BasePageResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SearchResultVo extends BaseVo {
+public class SearchResultVo extends BasePageResponse {
     private static final long serialVersionUID = 3990445247649857166L;
     private Integer searchType;
     private List<? extends SearchResultListItemVo> list;

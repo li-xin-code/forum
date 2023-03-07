@@ -1,10 +1,14 @@
 package com.lixin.campusforum.dao;
 
 import com.lixin.campusforum.model.bo.user.UserInfoBo;
+import com.lixin.campusforum.model.bo.user.UserInfoListItemBo;
 import com.lixin.campusforum.model.entity.UserRegistrationDo;
+import com.lixin.campusforum.model.query.SearchQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author lixin
@@ -71,4 +75,13 @@ public interface UserRegistrationDao {
      * @date 2023/3/4 19:30
      **/
     UserInfoBo selectUserInfo(@Param("userId") String userId);
+
+    /**
+     * selectUserInfoBySearch
+     *
+     * @param keyword ...
+     * @return java.util.List<com.lixin.campusforum.model.bo.user.UserInfoListItemBo>
+     * @date 2023/3/7 21:44
+     **/
+    List<UserInfoListItemBo> selectUserInfoBySearch(SearchQuery keyword);
 }

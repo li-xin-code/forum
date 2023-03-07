@@ -10,7 +10,9 @@ import com.lixin.campusforum.model.vo.LoginVo;
 import com.lixin.campusforum.model.vo.search.SearchResultVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.FileService;
+import com.lixin.campusforum.service.SearchService;
 import com.lixin.campusforum.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
  * @author lixin
  */
 @RestController
+@RequiredArgsConstructor
 public class ForumSystemController {
 
     private final UserService userService;
     private final FileService fileService;
-
-    public ForumSystemController(UserService userService, FileService fileService) {
-        this.userService = userService;
-        this.fileService = fileService;
-    }
+    private final SearchService searchService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -50,9 +49,7 @@ public class ForumSystemController {
 
     @GetMapping("/search")
     public DataResult<SearchResultVo> search(SearchQuery query) {
-        System.out.println(query);
-        // todo 总查询
-        return null;
+        return searchService.search(query);
     }
 
 }

@@ -6,6 +6,7 @@ import com.lixin.campusforum.model.bo.topic.TopicListItemBo;
 import com.lixin.campusforum.model.bo.topic.TopicModifyBo;
 import com.lixin.campusforum.model.entity.TopicDo;
 import com.lixin.campusforum.model.query.RelatedMeQuery;
+import com.lixin.campusforum.model.query.SearchQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -74,5 +75,14 @@ public interface TopicDao {
      * @date 2023/3/7 16:15
      **/
     List<RelatedMeListItemBo> selectRelatedMe(@Param("query") RelatedMeQuery query, @Param("userId") String userId);
+
+    /**
+     * selectTopicList
+     *
+     * @param keyword ...
+     * @return java.util.List<com.lixin.campusforum.model.bo.topic.TopicListItemBo>
+     * @date 2023/3/7 23:54
+     **/
+    List<TopicListItemBo> selectTopicList(SearchQuery keyword);
 
 }

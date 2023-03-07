@@ -1,5 +1,8 @@
 package com.lixin.campusforum.common.constant.enums;
 
+import java.util.EnumSet;
+import java.util.Objects;
+
 /**
  * @author lixin
  * @date 2023/3/4 18:25
@@ -21,7 +24,7 @@ public enum UserGenderEnums {
     /**
      * gender code
      */
-    private final int code;
+    private final Integer code;
 
     /**
      * 说明
@@ -33,12 +36,20 @@ public enum UserGenderEnums {
         this.description = description;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public static String convert(int code) {
+        return EnumSet.allOf(UserGenderEnums.class).stream()
+                .filter(item -> Objects.equals(item.getCode(), code))
+                .findFirst()
+                .orElse(UserGenderEnums.UNKNOWN)
+                .getDescription();
     }
 
 }

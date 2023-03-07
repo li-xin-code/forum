@@ -7,6 +7,7 @@ import com.lixin.campusforum.common.utils.ResultUtils;
 import com.lixin.campusforum.config.UploadFileConfig;
 import com.lixin.campusforum.model.vo.FileUploadVo;
 import com.lixin.campusforum.service.FileService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,13 +21,10 @@ import java.util.UUID;
  */
 @Slf4j
 @Service("fileService")
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
     private final UploadFileConfig uploadFileConfig;
-
-    public FileServiceImpl(UploadFileConfig uploadFileConfig) {
-        this.uploadFileConfig = uploadFileConfig;
-    }
 
     @Override
     public DataResult<FileUploadVo> save(MultipartFile file) {

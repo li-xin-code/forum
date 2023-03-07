@@ -20,6 +20,7 @@ import com.lixin.campusforum.model.form.TopicModifyForm;
 import com.lixin.campusforum.model.query.RelatedMeQuery;
 import com.lixin.campusforum.model.vo.topic.*;
 import com.lixin.campusforum.service.TopicService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,17 +35,12 @@ import static com.lixin.campusforum.common.utils.ForumSystemUtils.dateFormat;
  * @author lixin
  */
 @Service("topicService")
+@RequiredArgsConstructor
 public class TopicServiceImpl implements TopicService {
 
     private final TopicDao topicDao;
     private final PageConfig pageConfig;
     private final CommentDao commentDao;
-
-    public TopicServiceImpl(TopicDao topicDao, PageConfig pageConfig, CommentDao commentDao) {
-        this.topicDao = topicDao;
-        this.pageConfig = pageConfig;
-        this.commentDao = commentDao;
-    }
 
     @Override
     public DataResult<AddTopicVo> add(TopicForm form, String authorId) {

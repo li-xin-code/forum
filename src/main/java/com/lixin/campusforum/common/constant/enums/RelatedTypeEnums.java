@@ -44,6 +44,6 @@ public enum RelatedTypeEnums {
         return Arrays.stream(values())
                 .filter(relatedTypeEnums -> relatedTypeEnums.getCode().equals(code))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("related type code not match"));
+                .orElseThrow(() -> new RuntimeException("related voListItemType code not match"));
     }
 }

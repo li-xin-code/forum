@@ -13,6 +13,7 @@ import com.lixin.campusforum.model.vo.topic.TopicVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
 import com.lixin.campusforum.service.TopicService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +22,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/topic")
+@RequiredArgsConstructor
 public class TopicController {
 
     private final TopicService topicService;
     private final TokenService<UserVo> tokenService;
-
-    public TopicController(TopicService topicService, TokenService<UserVo> tokenService) {
-        this.topicService = topicService;
-        this.tokenService = tokenService;
-    }
 
     @LoginRequired
     @PostMapping

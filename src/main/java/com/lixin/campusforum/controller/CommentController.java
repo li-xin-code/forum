@@ -8,6 +8,7 @@ import com.lixin.campusforum.model.vo.comment.CommentListVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.CommentService;
 import com.lixin.campusforum.service.TokenService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -15,15 +16,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/comment")
+@RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
     private final TokenService<UserVo> tokenService;
-
-    public CommentController(CommentService commentService, TokenService<UserVo> tokenService) {
-        this.commentService = commentService;
-        this.tokenService = tokenService;
-    }
 
     @LoginRequired
     @PostMapping

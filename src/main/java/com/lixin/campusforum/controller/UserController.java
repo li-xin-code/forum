@@ -12,7 +12,7 @@ import com.lixin.campusforum.model.vo.user.UserInfoVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
 import com.lixin.campusforum.service.UserService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,16 +23,11 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final TokenService<UserVo> tokenService;
-
-    public UserController(UserService userService,
-                          @Qualifier("inMemoryTokenService") TokenService<UserVo> tokenService) {
-        this.userService = userService;
-        this.tokenService = tokenService;
-    }
 
     @LoginRequired
     @GetMapping("/info")
