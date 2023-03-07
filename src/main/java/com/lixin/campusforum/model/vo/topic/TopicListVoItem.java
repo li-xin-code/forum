@@ -15,6 +15,7 @@ public class TopicListVoItem extends BaseVo {
 
     private String topicId;
     private String author;
+    private String face;
     private String title;
     private String createTime;
     private String modifyTime;

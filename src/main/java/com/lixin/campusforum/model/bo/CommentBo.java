@@ -14,6 +14,7 @@ public class CommentBo extends BaseBo {
     private String commentId;
     private String authorId;
     private String author;
+    private String face;
     private String content;
     private String topicId;
     private String replyCommentId;

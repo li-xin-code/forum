@@ -20,6 +20,7 @@ public class CommentVo extends BaseVo {
      */
     private String author;
     private String authorId;
+    private String face;
     private String content;
     private String createTime;
     private String modifyTime;

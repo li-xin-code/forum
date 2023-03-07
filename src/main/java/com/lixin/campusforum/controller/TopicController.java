@@ -5,6 +5,7 @@ import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.common.result.NoDataResult;
 import com.lixin.campusforum.model.form.TopicForm;
 import com.lixin.campusforum.model.form.TopicModifyForm;
+import com.lixin.campusforum.model.query.RelatedMeQuery;
 import com.lixin.campusforum.model.vo.topic.AddTopicVo;
 import com.lixin.campusforum.model.vo.topic.RelatedMeVo;
 import com.lixin.campusforum.model.vo.topic.TopicListVo;
@@ -44,8 +45,8 @@ public class TopicController {
         return topicService.list(page);
     }
 
-    @GetMapping("/{topicId}")
-    public DataResult<TopicVo> one(@PathVariable String topicId) {
+    @GetMapping("/detail/{topicId}")
+    public DataResult<TopicVo> detail(@PathVariable String topicId) {
         return topicService.get(topicId);
     }
 
@@ -64,9 +65,10 @@ public class TopicController {
         return topicService.modify(form, user.getUserId());
     }
 
-    public DataResult<RelatedMeVo> relatedMe(@RequestHeader String token) {
-        // todo 与我相关内容，话题
-        return null;
+    @GetMapping("/related_me")
+    public DataResult<RelatedMeVo> relatedMe(RelatedMeQuery query, @RequestHeader String token) {
+        UserVo userVo = tokenService.getData(token);
+        return topicService.relatedMe(query, userVo.getUserId());
     }
 
 }

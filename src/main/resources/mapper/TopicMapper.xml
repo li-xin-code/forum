@@ -25,6 +25,7 @@
         select t.topic_id,
                username               as author,
                ur.user_id             as author_id,
+               ui.face                as face,
                title,
                t.content,
                t.create_time,
@@ -32,20 +33,23 @@
                ifnull(count(c.id), 0) as comment_total
         from topic t
                  inner join user_registration ur on ur.user_id = t.author_id
+                 inner join user_info ui on ur.user_id = ui.user_id
                  left join comment c on t.topic_id = c.topic_id
         where t.topic_id = #{topicId}
         group by t.topic_id
     </select>
 
-    <select id="list" resultType="com.lixin.campusforum.model.bo.topic.TopicListBoItem">
+    <select id="list" resultType="com.lixin.campusforum.model.bo.topic.TopicListItemBo">
         select t.topic_id,
                username               as author,
+               ui.face                as face,
                title,
                t.create_time,
                t.modify_time,
                ifnull(count(c.id), 0) as comment_total
         from topic t
                  inner join user_registration ur on ur.user_id = t.author_id
+                 inner join user_info ui on ur.user_id = ui.user_id
                  left join comment c on t.topic_id = c.topic_id
         group by t.topic_id, t.create_time
         order by t.create_time desc
@@ -54,6 +58,40 @@
     <select id="count" resultType="java.lang.Integer">
         select count(*)
         from topic;
+    </select>
+
+    <select id="selectRelatedMe" resultType="com.lixin.campusforum.model.bo.topic.RelatedMeListItemBo">
+        (select t.topic_id,
+                username               as author,
+                ui.face                as face,
+                title,
+                t.create_time,
+                t.modify_time,
+                ifnull(count(c.id), 0) as comment_total,
+                1                      as related_type_code
+         from topic t
+                  inner join user_registration ur on ur.user_id = t.author_id
+                  inner join user_info ui on ur.user_id = ui.user_id
+                  left join comment c on t.topic_id = c.topic_id
+         where t.author_id = #{userId}
+         group by t.topic_id, t.create_time
+         order by t.create_time desc)
+        union all
+        (select t.topic_id,
+                username               as author,
+                ui.face                as face,
+                title,
+                t.create_time,
+                t.modify_time,
+                ifnull(count(c.id), 0) as comment_total,
+                2                      as related_type_code
+         from comment c
+                  inner join topic t on c.topic_id = t.topic_id
+                  inner join user_registration ur on ur.user_id = t.author_id
+                  inner join user_info ui on ur.user_id = ui.user_id
+         where c.author_id = #{userId}
+         group by t.topic_id, t.create_time
+         order by t.create_time desc)
     </select>
 
 </mapper>

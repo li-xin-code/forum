@@ -31,6 +31,7 @@
         select comment_id,
                author_id,
                username as author,
+               ui.face  as face,
                content,
                topic_id,
                reply_comment_id,
@@ -39,6 +40,7 @@
                c.modify_time
         from comment c
                  inner join user_registration ur on ur.user_id = c.author_id
+                 inner join user_info ui on ur.user_id = ui.user_id
         where topic_id = #{topicId}
     </select>
 
@@ -46,6 +48,7 @@
         select comment_id,
                author_id,
                username as author,
+               ui.face  as face,
                content,
                topic_id,
                reply_comment_id,
@@ -54,6 +57,7 @@
                c.modify_time
         from comment c
                  inner join user_registration ur on ur.user_id = c.author_id
+                 inner join user_info ui on ur.user_id = ui.user_id
         where comment_id = #{commentId}
     </select>
 

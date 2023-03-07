@@ -14,6 +14,7 @@ public class RelatedMeListItemVo extends BaseVo {
     private static final long serialVersionUID = -4131152265976898985L;
     private String topicId;
     private String author;
+    private String face;
     private String title;
     private String createTime;
     private String modifyTime;

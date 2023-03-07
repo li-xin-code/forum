@@ -1,6 +1,7 @@
 package com.lixin.campusforum.model.base;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -8,7 +9,8 @@ import java.io.Serializable;
  * @author lixin
  */
 @Data
-public abstract class BasePageRequest implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public abstract class BasePageRequest extends BaseQuery implements Serializable {
 
     private static final long serialVersionUID = -5471394222391378282L;
 

@@ -1,6 +1,6 @@
 package com.lixin.campusforum.model.vo.topic;
 
-import com.lixin.campusforum.model.base.BaseVo;
+import com.lixin.campusforum.model.base.BasePageResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RelatedMeVo extends BaseVo {
+public class RelatedMeVo extends BasePageResponse {
     private static final long serialVersionUID = -5874235666545562412L;
     private List<RelatedMeListItemVo> list;
 }

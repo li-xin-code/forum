@@ -10,16 +10,15 @@ import com.lixin.campusforum.common.utils.ResultUtils;
 import com.lixin.campusforum.config.PageConfig;
 import com.lixin.campusforum.dao.CommentDao;
 import com.lixin.campusforum.dao.TopicDao;
+import com.lixin.campusforum.model.bo.topic.RelatedMeListItemBo;
 import com.lixin.campusforum.model.bo.topic.TopicBo;
-import com.lixin.campusforum.model.bo.topic.TopicListBoItem;
+import com.lixin.campusforum.model.bo.topic.TopicListItemBo;
 import com.lixin.campusforum.model.bo.topic.TopicModifyBo;
 import com.lixin.campusforum.model.entity.TopicDo;
 import com.lixin.campusforum.model.form.TopicForm;
 import com.lixin.campusforum.model.form.TopicModifyForm;
-import com.lixin.campusforum.model.vo.topic.AddTopicVo;
-import com.lixin.campusforum.model.vo.topic.TopicListVo;
-import com.lixin.campusforum.model.vo.topic.TopicListVoItem;
-import com.lixin.campusforum.model.vo.topic.TopicVo;
+import com.lixin.campusforum.model.query.RelatedMeQuery;
+import com.lixin.campusforum.model.vo.topic.*;
 import com.lixin.campusforum.service.TopicService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -70,7 +69,7 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public DataResult<TopicListVo> list(int page) {
         PageHelper.startPage(page, pageConfig.getTopicPageSize());
-        List<TopicListBoItem> bos = topicDao.list();
+        List<TopicListItemBo> bos = topicDao.list();
         TopicListVo vo = new TopicListVo();
         ForumSystemUtils.configPageInfo(vo, bos);
         List<TopicListVoItem> list = ForumSystemUtils.easyCopy(bos, TopicListVoItem.class);
@@ -119,6 +118,17 @@ public class TopicServiceImpl implements TopicService {
             throw new ForumSystemException("remove topic fail: Actions do not come from the author.");
         }
         return ResultUtils.ok();
+    }
+
+    @Override
+    public DataResult<RelatedMeVo> relatedMe(RelatedMeQuery query, String userId) {
+        RelatedMeVo vo = new RelatedMeVo();
+        PageHelper.startPage(query.getPageNum(), query.getPageSize());
+        List<RelatedMeListItemBo> boList = topicDao.selectRelatedMe(query, userId);
+        ForumSystemUtils.configPageInfo(vo, boList);
+        List<RelatedMeListItemVo> list = ForumSystemUtils.easyCopy(boList, RelatedMeListItemVo.class);
+        vo.setList(list);
+        return ResultUtils.ok(vo);
     }
 
     private TopicVo b2v(TopicBo bo) {
