@@ -1,8 +1,8 @@
 package com.lixin.campusforum.controller;
 
 import com.lixin.campusforum.common.annotation.LoginRequired;
-import com.lixin.campusforum.common.exception.AuthenticationException;
 import com.lixin.campusforum.common.exception.ForumSystemException;
+import com.lixin.campusforum.common.exception.TokenInvalidException;
 import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.common.result.NoDataResult;
 import com.lixin.campusforum.model.form.RenameForm;
@@ -36,7 +36,7 @@ public class UserController {
                 .orElseGet(() ->
                         Optional.ofNullable(tokenService.getData(token))
                                 .map(UserVo::getUserId)
-                                .orElseThrow(() -> new AuthenticationException("token expired.")));
+                                .orElseThrow(TokenInvalidException::new));
         return userService.userInfo(id);
     }
 

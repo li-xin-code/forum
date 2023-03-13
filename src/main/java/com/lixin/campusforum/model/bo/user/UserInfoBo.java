@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 public class UserInfoBo extends BaseBo {
     private static final long serialVersionUID = 8700755988032360331L;
     private String userId;
-    private String userName;
+    private String username;
     private Integer gender;
     private String face;
     private String userSign;
