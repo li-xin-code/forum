@@ -53,7 +53,7 @@ public class FileServiceImpl implements FileService {
             throw new ForumSystemException("file save fail.");
         }
         FileUploadVo vo = new FileUploadVo();
-        vo.setPath(filename);
+        vo.setPath("/" + filename);
         return ResultUtils.ok(vo);
     }
 
