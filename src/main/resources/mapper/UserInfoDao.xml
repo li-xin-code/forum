@@ -89,10 +89,10 @@
             <if test="gender != null">
                 gender = #{gender},
             </if>
-            <if test="userSign != null">
+            <if test="userSign != null and userSign != ''">
                 user_sign = #{userSign},
             </if>
-            <if test="face != null">
+            <if test="face != null and face != ''">
                 face = #{face},
             </if>
         </set>

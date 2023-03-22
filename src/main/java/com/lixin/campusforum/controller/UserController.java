@@ -47,7 +47,7 @@ public class UserController {
         return userService.modifyUserInfo(form, userVo.getUserId());
     }
 
-    @GetMapping("/name_available")
+    @GetMapping("/name-available")
     public NoDataResult available(@RequestParam String name) {
         return userService.nameAvailable(name);
     }
