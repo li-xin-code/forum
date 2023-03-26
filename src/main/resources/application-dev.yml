@@ -22,11 +22,11 @@ spring:
 
 forum:
   page:
-    topic-page-size: 10
+    topic-page-size: 7
     comment-page-size: 6
   upload:
     image-path: /Users/lixin/Downloads/forum/img
-  default-face: "default.jpeg"
+  default-face: "/default.jpeg"
 
 mybatis:
   configuration:

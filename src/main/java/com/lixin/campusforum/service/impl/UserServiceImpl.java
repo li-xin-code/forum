@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public DataResult<UserVo> register(final RegisterForm form) {
         final String username = form.getUsername();
         final String password = form.getPassword();
-        if (nameIsAvailable(username)) {
+        if (!nameIsAvailable(username)) {
             throw new ForumSystemException("Username Unavailable.");
         }
         if (pwdFormatIsNotMatch(password)) {
