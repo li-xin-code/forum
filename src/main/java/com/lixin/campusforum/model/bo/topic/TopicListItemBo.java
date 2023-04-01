@@ -13,6 +13,7 @@ public class TopicListItemBo extends BaseBo {
     private static final long serialVersionUID = 3033044780266749320L;
     private String topicId;
     private String author;
+    private String authorId;
     private String face;
     private String title;
     private String createTime;

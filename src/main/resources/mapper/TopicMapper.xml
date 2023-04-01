@@ -42,6 +42,7 @@
     <select id="list" resultType="com.lixin.campusforum.model.bo.topic.TopicListItemBo">
         select t.topic_id,
                username               as author,
+               ur.user_id             as author_id,
                ui.face                as face,
                title,
                t.create_time,
