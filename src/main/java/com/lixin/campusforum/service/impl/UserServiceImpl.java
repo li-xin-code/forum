@@ -44,7 +44,7 @@ import static com.lixin.campusforum.common.constant.consist.UserConstant.DEFAULT
 public class UserServiceImpl implements UserService {
 
     private final UserRegistrationDao userDao;
-    private final TokenService<UserVo> tokenService;
+    private final TokenService<String> tokenService;
     private final UserInfoDao userInfoDao;
     private final ForumConfig forumConfig;
 
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
         if (UserUtils.passwordEncode(form.getPassword()).equals(registrationDo.getPassword())) {
             UserVo user = new UserVo();
             BeanUtils.copyProperties(registrationDo, user);
-            String token = tokenService.getToken(user);
+            String token = tokenService.getToken(user.getUserId());
             LoginVo response = new LoginVo();
             response.setToken(token);
             response.setUser(user);
@@ -100,17 +100,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public DataResult<UserVo> rename(String name, String token) {
-        UserVo user = tokenService.getData(token);
+    public DataResult<UserVo> rename(String name, String userId) {
         if (!nameIsAvailable(name)) {
             throw new ForumSystemException("Username Unavailable.");
         }
-        if (userDao.updateName(name, user.getUserId()) != 1) {
+        if (userDao.updateName(name, userId) != 1) {
             throw new NotExpectedException("sql execute inconsistent with expectations.");
         }
-        user.setUsername(name);
-        tokenService.update(token, user);
-        return ResultUtils.ok(user);
+        String username = Optional.ofNullable(userDao.findByUserId(userId))
+                .map(UserRegistrationDo::getUsername)
+                .orElse("");
+        UserVo userVo = new UserVo();
+        userVo.setUserId(userId);
+        userVo.setUsername(username);
+        return ResultUtils.ok(userVo);
     }
 
     @Override

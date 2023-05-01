@@ -3,9 +3,8 @@ package com.lixin.campusforum.config.interceptor;
 import com.lixin.campusforum.common.annotation.LoginRequired;
 import com.lixin.campusforum.common.exception.AuthenticationException;
 import com.lixin.campusforum.common.exception.TokenInvalidException;
-import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -19,16 +18,10 @@ import java.lang.reflect.Method;
  * @author lixin
  */
 @Component
+@RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    private final TokenService<UserVo> tokenService;
-
-    public AuthenticationInterceptor(
-            @Qualifier("inMemoryTokenService")
-                    TokenService<UserVo> tokenService) {
-        this.tokenService = tokenService;
-    }
-
+    private final TokenService<String> tokenService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -61,8 +54,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (!StringUtils.hasLength(token)) {
             throw new AuthenticationException("Login required.");
         }
-        UserVo user = tokenService.getData(token);
-        if (user == null) {
+        if (!tokenService.contain(token)) {
             throw new TokenInvalidException();
         }
         return true;

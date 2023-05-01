@@ -3,12 +3,12 @@ package com.lixin.campusforum.service.impl;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.lixin.campusforum.common.exception.TokenInvalidException;
-import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -19,22 +19,22 @@ import java.util.concurrent.TimeUnit;
  * @author lixin
  */
 @Service("inMemoryTokenService")
-public class InMemoryTokenServiceImpl implements TokenService<UserVo> {
+public class InMemoryTokenServiceImpl implements TokenService<String> {
 
-    private final Cache<String, UserVo> tokenCache = CacheBuilder.newBuilder()
+    private final Cache<String, String> tokenCache = CacheBuilder.newBuilder()
             .maximumSize(1000L)
             .expireAfterAccess(20, TimeUnit.MINUTES)
             .build();
 
     @Override
-    public String getToken(UserVo data) {
+    public String getToken(String data) {
         String token = generateToken();
         tokenCache.put(token, data);
         return token;
     }
 
     @Override
-    public UserVo getData(String token) {
+    public String getData(String token) {
         return Optional.ofNullable(tokenCache.getIfPresent(token))
                 .orElseThrow(TokenInvalidException::new);
     }
@@ -45,8 +45,8 @@ public class InMemoryTokenServiceImpl implements TokenService<UserVo> {
     }
 
     @Override
-    public void update(String token, UserVo data) {
-        tokenCache.put(token, data);
+    public Boolean contain(String token) {
+        return Objects.nonNull(tokenCache.getIfPresent(token));
     }
 
     private String generateToken() {

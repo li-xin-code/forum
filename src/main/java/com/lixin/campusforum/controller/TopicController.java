@@ -10,7 +10,6 @@ import com.lixin.campusforum.model.vo.topic.AddTopicVo;
 import com.lixin.campusforum.model.vo.topic.RelatedMeVo;
 import com.lixin.campusforum.model.vo.topic.TopicListVo;
 import com.lixin.campusforum.model.vo.topic.TopicVo;
-import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
 import com.lixin.campusforum.service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +25,15 @@ import org.springframework.web.bind.annotation.*;
 public class TopicController {
 
     private final TopicService topicService;
-    private final TokenService<UserVo> tokenService;
+    private final TokenService<String> tokenService;
 
     @LoginRequired
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DataResult<AddTopicVo> add(@RequestBody TopicForm form,
                                       @RequestHeader String token) {
-        UserVo user = tokenService.getData(token);
-        return topicService.add(form, user.getUserId());
+        String userId = tokenService.getData(token);
+        return topicService.add(form, userId);
     }
 
     @GetMapping("/list/{page}")
@@ -51,21 +50,21 @@ public class TopicController {
     @DeleteMapping("/{topicId}")
     public NoDataResult del(@PathVariable String topicId,
                             @RequestHeader("token") String token) {
-        UserVo user = tokenService.getData(token);
-        return topicService.remove(topicId, user.getUserId());
+        String userId = tokenService.getData(token);
+        return topicService.remove(topicId, userId);
     }
 
     @PutMapping
     public NoDataResult modify(@RequestBody TopicModifyForm form,
                                @RequestHeader String token) {
-        UserVo user = tokenService.getData(token);
-        return topicService.modify(form, user.getUserId());
+        String userId = tokenService.getData(token);
+        return topicService.modify(form, userId);
     }
 
     @GetMapping("/related_me")
     public DataResult<RelatedMeVo> relatedMe(RelatedMeQuery query, @RequestHeader String token) {
-        UserVo userVo = tokenService.getData(token);
-        return topicService.relatedMe(query, userVo.getUserId());
+        String userId = tokenService.getData(token);
+        return topicService.relatedMe(query, userId);
     }
 
 }

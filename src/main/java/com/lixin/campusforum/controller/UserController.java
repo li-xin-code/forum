@@ -2,7 +2,6 @@ package com.lixin.campusforum.controller;
 
 import com.lixin.campusforum.common.annotation.LoginRequired;
 import com.lixin.campusforum.common.exception.ForumSystemException;
-import com.lixin.campusforum.common.exception.TokenInvalidException;
 import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.common.result.NoDataResult;
 import com.lixin.campusforum.model.form.RenameForm;
@@ -16,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * @author lixin
@@ -27,24 +26,19 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final TokenService<UserVo> tokenService;
+    private final TokenService<String> tokenService;
 
     @LoginRequired
     @GetMapping("/info")
     public DataResult<UserInfoVo> userInfo(@RequestParam(required = false) String userId, @RequestHeader String token) {
-        String id = Optional.ofNullable(userId)
-                .orElseGet(() ->
-                        Optional.ofNullable(tokenService.getData(token))
-                                .map(UserVo::getUserId)
-                                .orElseThrow(TokenInvalidException::new));
-        return userService.userInfo(id);
+        return userService.userInfo(Objects.isNull(userId) ? tokenService.getData(token) : userId);
     }
 
     @LoginRequired
     @PutMapping("/info")
     public NoDataResult modifyUserInfo(@RequestBody UserInfoModifyForm form, @RequestHeader String token) {
-        UserVo userVo = tokenService.getData(token);
-        return userService.modifyUserInfo(form, userVo.getUserId());
+        String userId = tokenService.getData(token);
+        return userService.modifyUserInfo(form, userId);
     }
 
     @GetMapping("/name-available")
@@ -56,19 +50,20 @@ public class UserController {
     @PutMapping("/rename")
     public DataResult<UserVo> rename(@Validated @RequestBody RenameForm rename,
                                      @RequestHeader("token") String token) {
-        return userService.rename(rename.getName(), token);
+        String userId = tokenService.getData(token);
+        return userService.rename(rename.getName(), userId);
     }
 
     @LoginRequired
     @PutMapping("/reset-password")
     public NoDataResult resetPassword(@Validated @RequestBody ResetPasswordForm form,
                                       @RequestHeader String token) {
-        UserVo user = tokenService.getData(token);
+        String userId = tokenService.getData(token);
         String password = form.getPassword();
         if (!password.equals(form.getRepeatPassword())) {
             throw new ForumSystemException("password and the repeat password do not match.");
         }
-        return userService.resetPassword(password, user.getUserId());
+        return userService.resetPassword(password, userId);
     }
 
 }

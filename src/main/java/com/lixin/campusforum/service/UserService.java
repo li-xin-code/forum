@@ -34,11 +34,11 @@ public interface UserService {
     /**
      * reset username
      *
-     * @param name  new name
-     * @param token token
+     * @param name   new name
+     * @param userId userId
      * @return new user info
      */
-    DataResult<UserVo> rename(String name, String token);
+    DataResult<UserVo> rename(String name, String userId);
 
     /**
      * resetPassword

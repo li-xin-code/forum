@@ -29,11 +29,10 @@ public interface TokenService<T> {
     void removeToken(String token);
 
     /**
-     * update data by token
+     * token 是否存在
      *
-     * @param token token
-     * @param data  data
+     * @param token ...
+     * @return ...
      */
-    void update(String token, T data);
-
+    Boolean contain(String token);
 }
