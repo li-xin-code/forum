@@ -16,8 +16,8 @@ import com.lixin.campusforum.model.bo.user.UserInfoBo;
 import com.lixin.campusforum.model.entity.UserInfoDo;
 import com.lixin.campusforum.model.entity.UserRegistrationDo;
 import com.lixin.campusforum.model.form.LoginForm;
+import com.lixin.campusforum.model.form.ModifyUserInfoForm;
 import com.lixin.campusforum.model.form.RegisterForm;
-import com.lixin.campusforum.model.form.UserInfoModifyForm;
 import com.lixin.campusforum.model.vo.LoginVo;
 import com.lixin.campusforum.model.vo.user.UserInfoVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public NoDataResult modifyUserInfo(UserInfoModifyForm form, String userId) {
+    public NoDataResult modifyUserInfo(ModifyUserInfoForm form, String userId) {
         if (Objects.isNull(userId)) {
             throw new NotExpectedException("userId can not be null.");
         }

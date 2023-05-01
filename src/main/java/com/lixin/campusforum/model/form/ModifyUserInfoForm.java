@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserInfoModifyForm extends BaseForm {
+public class ModifyUserInfoForm extends BaseForm {
     private static final long serialVersionUID = 5585872519577128914L;
     private Integer gender;
     private String face;

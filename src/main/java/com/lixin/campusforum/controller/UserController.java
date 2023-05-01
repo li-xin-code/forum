@@ -4,9 +4,9 @@ import com.lixin.campusforum.common.annotation.LoginRequired;
 import com.lixin.campusforum.common.exception.ForumSystemException;
 import com.lixin.campusforum.common.result.DataResult;
 import com.lixin.campusforum.common.result.NoDataResult;
+import com.lixin.campusforum.model.form.ModifyUserInfoForm;
 import com.lixin.campusforum.model.form.RenameForm;
 import com.lixin.campusforum.model.form.ResetPasswordForm;
-import com.lixin.campusforum.model.form.UserInfoModifyForm;
 import com.lixin.campusforum.model.vo.user.UserInfoVo;
 import com.lixin.campusforum.model.vo.user.UserVo;
 import com.lixin.campusforum.service.TokenService;
@@ -36,7 +36,7 @@ public class UserController {
 
     @LoginRequired
     @PutMapping("/info")
-    public NoDataResult modifyUserInfo(@RequestBody UserInfoModifyForm form, @RequestHeader String token) {
+    public NoDataResult modifyUserInfo(@RequestBody ModifyUserInfoForm form, @RequestHeader String token) {
         String userId = tokenService.getData(token);
         return userService.modifyUserInfo(form, userId);
     }
