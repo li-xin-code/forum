@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TopicListVoItem extends BaseVo {
+public class TopicListVoItemVo extends BaseVo {
 
     private static final long serialVersionUID = -2769823972056666317L;
 

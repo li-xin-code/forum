@@ -68,7 +68,7 @@ public class TopicServiceImpl implements TopicService {
         List<TopicListItemBo> bos = topicDao.list();
         TopicListVo vo = new TopicListVo();
         ForumSystemUtils.configPageInfo(vo, bos);
-        List<TopicListVoItem> list = ForumSystemUtils.easyCopy(bos, TopicListVoItem.class);
+        List<TopicListVoItemVo> list = ForumSystemUtils.easyCopy(bos, TopicListVoItemVo.class);
         vo.setList(list);
         return ResultUtils.ok(vo);
     }

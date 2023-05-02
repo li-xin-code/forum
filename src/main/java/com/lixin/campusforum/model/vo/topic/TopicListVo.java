@@ -16,6 +16,6 @@ public class TopicListVo extends BasePageResponse {
 
     private static final long serialVersionUID = -7009460156174330205L;
 
-    private List<TopicListVoItem> list;
+    private List<TopicListVoItemVo> list;
 
 }

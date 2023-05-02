@@ -13,7 +13,7 @@ import com.lixin.campusforum.model.bo.user.UserInfoListItemBo;
 import com.lixin.campusforum.model.query.SearchQuery;
 import com.lixin.campusforum.model.vo.search.SearchResultVo;
 import com.lixin.campusforum.model.vo.search.SearchUserListItemVo;
-import com.lixin.campusforum.model.vo.topic.TopicListVoItem;
+import com.lixin.campusforum.model.vo.topic.TopicListVoItemVo;
 import com.lixin.campusforum.service.SearchService;
 import com.lixin.campusforum.service.search.Search;
 import lombok.RequiredArgsConstructor;
@@ -82,12 +82,12 @@ public class SearchServiceImpl implements SearchService, InitializingBean {
 
         @Override
         public SearchResultVo search(SearchQuery keyword) {
-            BiConsumer<TopicListVoItem, TopicListItemBo> empty = (t, r) -> {
+            BiConsumer<TopicListVoItemVo, TopicListItemBo> empty = (t, r) -> {
             };
             return ForumSystemUtils.build(SearchResultVo.class,
                             () -> topicDao.selectTopicList(keyword),
                             empty,
-                            TopicListVoItem.class)
+                            TopicListVoItemVo.class)
                     .run(keyword);
         }
     }
